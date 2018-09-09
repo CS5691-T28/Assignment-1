@@ -1,4 +1,4 @@
-x = -10:0.1:10;
+x = -10:0.2:10;
 n = size(x,2);
 n
 f = exp(cos(2*3.14*x))+x;
@@ -18,10 +18,12 @@ title(ax2,'Plot of y=\ite^{cos(2\pix)}+x with Random noise');
 xlabel(ax2,'x');
 ylabel(ax2,'t');
 
-%x - input values, t- output values, Need to fit parameters
+%x - input values, t- output values, Need to fit parameters by least
+%sqaured error method.
 m = 3;
 A = zeros(m,m);
 b = zeros(1,m);
+x1 = zeros(m,n)
 for i = 1:m
     for j = 1:m
      A(i,j) = sum(x.^(i+j-2));
@@ -36,14 +38,19 @@ b = b';
 w = linsolve(A,b);
 %w
 %plot_x = -10:1:10;
-y = w(1)+w(2)*x+w(3)*(x.^2);
+for i=1:m
+    x1(i,:) = x.^(i-1);
+end   
+%w
+%x1
+y = w'*x1;
 ax3 = subplot(2,2,3);
 plot(x,t,'color','b'); hold on;
 plot(x,y,'color','r');
 title('Polynomial Fitting curve with m=3');
 
 ax4 = subplot(2,2,4);
-p = polyfit(x,t,3);
+p = polyfit(x,t,m);
 t2 = polyval(p,x);
 plot(x,t,'color','b');hold on;
 plot(x,t2,'color','r');
